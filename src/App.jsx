@@ -1,10 +1,32 @@
 
 import React from "react";
+import {
+  ChakraProvider,
+  SimpleGrid
+} from '@chakra-ui/react'
+import credentials from "../credentials.json";
+
+const CredentialsTable = () => {
+  return (
+    <div>
+    </div>
+  );
+}
+
+const JsonField = () => {
+  return (
+    <div>
+    </div>
+  );
+}
 
 export const App = () => {
   return (
-    <div>
-      <h1>Hello World!</h1>
-    </div>
+    <ChakraProvider>
+      <SimpleGrid columns={2}>
+        <CredentialsTable />
+        <JsonField />
+      </SimpleGrid>
+    </ChakraProvider>
   );
 }
