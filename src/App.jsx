@@ -19,7 +19,7 @@ import "./styles.css"
 
 const CredentialsTable = ({ credentials }) => {
   return (
-    <div>
+    <div className={"OuterTable"}>
       <Table variant={"simple"}>
         <Thead>
           <Tr>
@@ -50,7 +50,7 @@ const CredentialsTable = ({ credentials }) => {
 
 const JsonField = ({credentials}) => {
   return (
-    <div>
+    <div className={"OuterJson"}>
       <SyntaxHighlighter language={"json"} style={dark}>
         {credentials}
       </SyntaxHighlighter>

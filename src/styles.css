@@ -1,3 +1,11 @@
 .Centering {
   text-align: center;
 }
+
+.OuterJson {
+  margin: 10px;
+}
+
+.OuterTable {
+  margin: 10px;
+}
