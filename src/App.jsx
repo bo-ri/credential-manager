@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useState, useMemo } from "react";
 import {
   ChakraProvider,
   SimpleGrid,
@@ -12,6 +12,8 @@ import {
   Checkbox,
   Switch
 } from '@chakra-ui/react'
+import SyntaxHighlighter from "react-syntax-highlighter";
+import { dark } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import credentials from "../credentials.json";
 import "./styles.css"
 
@@ -33,7 +35,7 @@ const CredentialsTable = ({ credentials }) => {
               <Td>{credential}</Td>
               <Td>
                 <SimpleGrid row={2}>
-                  <Switch colorSheme={"gray"} className={"Centering"}></Switch>
+                  <Switch colorsheme={"gray"} className={"Centering"}></Switch>
                   <span className={"Centering"}>dev/prod</span>
                 </SimpleGrid>
               </Td>
@@ -46,19 +48,31 @@ const CredentialsTable = ({ credentials }) => {
   );
 }
 
-const JsonField = () => {
+const JsonField = ({credentials}) => {
   return (
     <div>
+      <SyntaxHighlighter language={"json"} style={dark}>
+        {credentials}
+      </SyntaxHighlighter>
     </div>
   );
 }
 
 export const App = () => {
+  // credentialsの初期値 devの値だけ抜き出す
+  const initialCredentials = useMemo(() => {
+    let initialCreds = {};
+    Object.keys(credentials).forEach(key => {
+      initialCreds[key] = credentials[key].dev;
+    });
+    return initialCreds;
+  }, [])
+  const [getCredentials, setCredentials] = useState(initialCredentials);
   return (
     <ChakraProvider>
       <SimpleGrid columns={2}>
         <CredentialsTable credentials={credentials} />
-        <JsonField />
+        <JsonField credentials={JSON.stringify(getCredentials, null, 2)} />
       </SimpleGrid>
     </ChakraProvider>
   );
