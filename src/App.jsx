@@ -118,15 +118,37 @@ const CredentialsTable = ({ credentials, setCredentials, getCredentials }) => {
 }
 
 const JsonField = ({credentials}) => {
+  // アウトプットの json/文字列 を持つstate
+  const [isJson, setIsJson] = useState(true);
+
+  // アウトプットの形式変更ボタンが押された時の挙動
+  const handleOnClick = useCallback(() => {
+    setIsJson((state) => !state);
+  }, []);
+
+  // アウトプットの形式変更ボタンのテキスト
+  const ButtonText = useMemo(() => {
+    return isJson ? "toString" : "toJson"
+  }, [isJson]);
+
+  // アウトプットの形式を変更する
+  // JSON or JSON文字列
+  const jsonCredentials = useMemo(() => {
+    if (isJson) {
+      return JSON.stringify(credentials, null, 2)
+    }
+    return `'${JSON.stringify(credentials)}'`;
+  }, [isJson, credentials]);
   return (
     <div className={"OuterJson"}>
       <SyntaxHighlighter language={"json"} style={dark}>
-        {credentials}
+        {jsonCredentials}
       </SyntaxHighlighter>
       <div className={"CopyButton"}>
-        <CopyToClipboard text={credentials}>
+        <CopyToClipboard text={jsonCredentials}>
           <Button colorScheme='blue' size={"xs"}>COPY</Button>
         </CopyToClipboard>
+        <span className={"ChangeButton"}><Button colorScheme='blue' size={"xs"} onClick={handleOnClick}>{ButtonText}</Button></span>
       </div>
     </div>
   );
@@ -147,7 +169,7 @@ export const App = () => {
     <ChakraProvider>
       <SimpleGrid columns={2}>
         <CredentialsTable credentials={credentials} setCredentials={setCredentials} getCredentials={getCredentials} />
-        <JsonField credentials={JSON.stringify(getCredentials, null, 2)} />
+        <JsonField credentials={getCredentials} />
       </SimpleGrid>
     </ChakraProvider>
   );
