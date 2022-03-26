@@ -48,10 +48,10 @@ const CredentialsTable = ({ credentials, setCredentials, getCredentials }) => {
   const handleOnCheck = useCallback((event) => {
     const key = event.target.id;
     const isChecked = event.target.checked;
-    setCheckList({
-      ...getCheckList,
+    setCheckList((state) => ({
+      ...state,
       [key]: isChecked
-    })
+    }))
   }, []);
 
   // Switchの下に表示するテキストを返す
