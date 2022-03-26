@@ -53,6 +53,17 @@ const CredentialsTable = ({ credentials, setCredentials, getCredentials }) => {
       [key]: isChecked
     })
   }, []);
+
+  // Switchの下に表示するテキストを返す
+  const switchText = useCallback((key) => {
+    if (credentials[key].dev && credentials[key].prod) {
+      return "dev/prod"
+    } else if (credentials[key].dev && !credentials[key].prod) {
+      return "only dev"
+    } else if (!credentials[key].dev && credentials[key].prod) {
+      return "only prod";
+    }
+  }, []);
   return (
     <div className={"OuterTable"}>
       <Table variant={"simple"}>
@@ -84,7 +95,8 @@ const CredentialsTable = ({ credentials, setCredentials, getCredentials }) => {
                    isChecked={credentials[credential].dev ? undefined : true}
                    onChange={handleOnChange}
                   ></Switch>: <span className={"EmptySpace"}></span>}
-                  <span className={"Centering"}>dev/prod</span>
+                  {/* <span className={"Centering"}>{credentials[credential].dev ? "dev" : ""}/{credentials[credential].prod ? "prod" : ""}</span> */}
+                  <span className={"Centering"}>{switchText(credential)}</span>
                 </SimpleGrid>
               </Td>
               </Tr>
