@@ -30,6 +30,29 @@ const CredentialsTable = ({ credentials, setCredentials, getCredentials }) => {
       [credentialName]: targetCred
     })
   }, [])
+
+  // checkboxが押されてるかどうかを保持するstate
+  // trueのkeyの場合選択されたvalueがjsonに出力される
+  const checkListInitialState = useMemo(() => {
+    let initialState = {};
+    Object.keys(credentials).map((credential) => {
+      initialState[credential] = true
+    });
+    return initialState;
+  }, [])
+  const [getCheckList, setCheckList] = useState(checkListInitialState);
+
+  // checkboxが押された時の挙動
+  // on  -> rowを
+  // off -> rowを
+  const handleOnCheck = useCallback((event) => {
+    const key = event.target.id;
+    const isChecked = event.target.checked;
+    setCheckList({
+      ...getCheckList,
+      [key]: isChecked
+    })
+  }, []);
   return (
     <div className={"OuterTable"}>
       <Table variant={"simple"}>
@@ -45,7 +68,7 @@ const CredentialsTable = ({ credentials, setCredentials, getCredentials }) => {
             const hasOtherCred = credentials[credential].hasOwnProperty("dev") && credentials[credential].hasOwnProperty("prod");
             return (
               <Tr key={credential}>
-              <Td><Checkbox defaultChecked></Checkbox></Td>
+              <Td><Checkbox defaultChecked onChange={handleOnCheck} id={credential}></Checkbox></Td>
               <Td>{credential}</Td>
               <Td>
                 <SimpleGrid row={2}>
@@ -53,14 +76,14 @@ const CredentialsTable = ({ credentials, setCredentials, getCredentials }) => {
                     devかprod片方しかない場合はswitchをdisableにしておく
                     prodしかない場合は初期値をprodにする
                    */}
-                  <Switch
+                  {getCheckList[credential] ? <Switch
                    colorsheme={"gray"}
                    className={"Centering"}
                    id={credential}
                    isDisabled={!hasOtherCred}
                    isChecked={credentials[credential].dev ? undefined : true}
                    onChange={handleOnChange}
-                  ></Switch>
+                  ></Switch>: <span className={"EmptySpace"}></span>}
                   <span className={"Centering"}>dev/prod</span>
                 </SimpleGrid>
               </Td>
