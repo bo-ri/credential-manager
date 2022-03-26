@@ -3,7 +3,14 @@
 }
 
 .OuterJson {
+  position: relative;
   margin: 10px;
+}
+
+.CopyButton {
+  position: absolute;
+  right: 10px;
+  top: 10px;
 }
 
 .OuterTable {

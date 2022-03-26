@@ -10,10 +10,13 @@ import {
   Td,
   Tbody,
   Checkbox,
-  Switch
+  Switch,
+  Button,
+  Flex
 } from '@chakra-ui/react'
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { dark } from "react-syntax-highlighter/dist/esm/styles/hljs";
+import { CopyToClipboard } from "react-copy-to-clipboard";
 import credentials from "../credentials.json";
 import "./styles.css"
 
@@ -120,6 +123,11 @@ const JsonField = ({credentials}) => {
       <SyntaxHighlighter language={"json"} style={dark}>
         {credentials}
       </SyntaxHighlighter>
+      <div className={"CopyButton"}>
+        <CopyToClipboard text={credentials}>
+          <Button colorScheme='blue' size={"xs"}>COPY</Button>
+        </CopyToClipboard>
+      </div>
     </div>
   );
 }
