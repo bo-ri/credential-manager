@@ -25,10 +25,10 @@ const CredentialsTable = ({ credentials, setCredentials, getCredentials }) => {
     const credentialName = event.target.id;
     const isProd = event.target.checked ? "prod" : "dev";
     const targetCred = credentials[credentialName][isProd]
-    setCredentials({
-      ...getCredentials,
+    setCredentials((state) => ({
+      ...state,
       [credentialName]: targetCred
-    })
+    }))
   }, [])
 
   // checkboxが押されてるかどうかを保持するstate
@@ -48,9 +48,16 @@ const CredentialsTable = ({ credentials, setCredentials, getCredentials }) => {
   const handleOnCheck = useCallback((event) => {
     const key = event.target.id;
     const isChecked = event.target.checked;
+    // checkされてるかどうかのstate更新
     setCheckList((state) => ({
       ...state,
       [key]: isChecked
+    }))
+    const target = isChecked ? credentials[key].dev ?? credentials[key].prod : undefined;
+    // jsonに出力するstateの更新
+    setCredentials((state) => ({
+      ...state,
+      [key]: target
     }))
   }, []);
 
