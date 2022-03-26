@@ -95,8 +95,7 @@ const CredentialsTable = ({ credentials, setCredentials, getCredentials }) => {
                    isChecked={credentials[credential].dev ? undefined : true}
                    onChange={handleOnChange}
                   ></Switch>: <span className={"EmptySpace"}></span>}
-                  {/* <span className={"Centering"}>{credentials[credential].dev ? "dev" : ""}/{credentials[credential].prod ? "prod" : ""}</span> */}
-                  <span className={"Centering"}>{switchText(credential)}</span>
+                  <span className={`Centering ${getCheckList[credential] ? "" : "DisableColor"}`}>{switchText(credential)}</span>
                 </SimpleGrid>
               </Td>
               </Tr>
