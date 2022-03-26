@@ -1,5 +1,5 @@
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useCallback } from "react";
 import {
   ChakraProvider,
   SimpleGrid,
@@ -17,7 +17,19 @@ import { dark } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import credentials from "../credentials.json";
 import "./styles.css"
 
-const CredentialsTable = ({ credentials }) => {
+const CredentialsTable = ({ credentials, setCredentials, getCredentials }) => {
+  // switchが押された時の挙動
+  // on  -> prodでjsonを上書き
+  // off -> devでjsonを上書き
+  const handleOnChange = useCallback((event) => {
+    const credentialName = event.target.id;
+    const isProd = event.target.checked ? "prod" : "dev";
+    const targetCred = credentials[credentialName][isProd]
+    setCredentials({
+      ...getCredentials,
+      [credentialName]: targetCred
+    })
+  }, [])
   return (
     <div className={"OuterTable"}>
       <Table variant={"simple"}>
@@ -29,13 +41,26 @@ const CredentialsTable = ({ credentials }) => {
         </Thead>
         <Tbody>
           {Object.keys(credentials).map((credential) => {
+            // dev or prod しかないフラグ
+            const hasOtherCred = credentials[credential].hasOwnProperty("dev") && credentials[credential].hasOwnProperty("prod");
             return (
               <Tr key={credential}>
               <Td><Checkbox defaultChecked></Checkbox></Td>
               <Td>{credential}</Td>
               <Td>
                 <SimpleGrid row={2}>
-                  <Switch colorsheme={"gray"} className={"Centering"}></Switch>
+                  {/**
+                    devかprod片方しかない場合はswitchをdisableにしておく
+                    prodしかない場合は初期値をprodにする
+                   */}
+                  <Switch
+                   colorsheme={"gray"}
+                   className={"Centering"}
+                   id={credential}
+                   isDisabled={!hasOtherCred}
+                   isChecked={credentials[credential].dev ? undefined : true}
+                   onChange={handleOnChange}
+                  ></Switch>
                   <span className={"Centering"}>dev/prod</span>
                 </SimpleGrid>
               </Td>
@@ -60,10 +85,11 @@ const JsonField = ({credentials}) => {
 
 export const App = () => {
   // credentialsの初期値 devの値だけ抜き出す
+  // devがない場合はprod
   const initialCredentials = useMemo(() => {
     let initialCreds = {};
     Object.keys(credentials).forEach(key => {
-      initialCreds[key] = credentials[key].dev;
+      initialCreds[key] = credentials[key].dev ?? credentials[key].prod;
     });
     return initialCreds;
   }, [])
@@ -71,7 +97,7 @@ export const App = () => {
   return (
     <ChakraProvider>
       <SimpleGrid columns={2}>
-        <CredentialsTable credentials={credentials} />
+        <CredentialsTable credentials={credentials} setCredentials={setCredentials} getCredentials={getCredentials} />
         <JsonField credentials={JSON.stringify(getCredentials, null, 2)} />
       </SimpleGrid>
     </ChakraProvider>
