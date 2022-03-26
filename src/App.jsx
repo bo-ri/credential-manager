@@ -20,7 +20,10 @@ import { CopyToClipboard } from "react-copy-to-clipboard";
 import credentials from "../credentials.json";
 import "./styles.css"
 
-const CredentialsTable = ({ credentials, setCredentials, getCredentials }) => {
+/**
+ * 左側に表示するテーブルのコンポーネント
+ */
+const CredentialsTable = ({ credentials, setCredentials }) => {
   // switchが押された時の挙動
   // on  -> prodでjsonを上書き
   // off -> devでjsonを上書き
@@ -117,6 +120,9 @@ const CredentialsTable = ({ credentials, setCredentials, getCredentials }) => {
   );
 }
 
+/**
+ * 右側に表示するテキストフィールドのコンポーネント
+ */
 const JsonField = ({credentials}) => {
   // アウトプットの json/文字列 を持つstate
   const [isJson, setIsJson] = useState(true);
@@ -154,6 +160,9 @@ const JsonField = ({credentials}) => {
   );
 }
 
+/**
+ * ベースのコンポーネント
+ */
 export const App = () => {
   // credentialsの初期値 devの値だけ抜き出す
   // devがない場合はprod
@@ -168,7 +177,7 @@ export const App = () => {
   return (
     <ChakraProvider>
       <SimpleGrid columns={2}>
-        <CredentialsTable credentials={credentials} setCredentials={setCredentials} getCredentials={getCredentials} />
+        <CredentialsTable credentials={credentials} setCredentials={setCredentials} />
         <JsonField credentials={getCredentials} />
       </SimpleGrid>
     </ChakraProvider>
